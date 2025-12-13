@@ -127,14 +127,21 @@ pip install -r collectors/worldnews_collector/requirements.txt
 Crie um `.env` no root do projeto ou exporte as variáveis antes de rodar os serviços localmente. Exemplo de variáveis importantes:
 
 `POSTGRES_HOST=`
+
 `POSTGRES_PORT=`
+
 `POSTGRES_DB=`
+
 `POSTGRES_USER=`
+
 `POSTGRES_PASSWORD=`
+
 `INTERVAL_UPDATE=` # Intervalo de atualização/coleta das noticias
 
 (aqui eu usei dois serviços o [NewsAPI](https://newsapi.org/) e o [WorldNews](https://www.worldnewsapi.com/), portanto:)
+
 `NEWSAPI_KEY=`
+
 `WORLDNEWS_API_KEY=`
 
 > Recomendo criar um `.env.example` com nomes de variáveis (sem valores sensíveis) e adicionar `.env` ao `.gitignore`.
