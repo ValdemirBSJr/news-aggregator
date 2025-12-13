@@ -1,0 +1,157 @@
+/*
+ * Estilo de Jornal Antigo
+ */
+
+/* Cores e Fontes */
+:root {
+    --cor-papel: #f7f3e8; /* Creme ou SépiA */
+    --cor-tinta: #2c2c2c; /* Preto quase escuro */
+    --fonte-cabecalho: 'Roboto Slab', serif;
+    --fonte-corpo: 'Merriweather', serif;
+}
+
+/* Reset básico e fundo estilo papel */
+body {
+    background-color: var(--cor-papel);
+    color: var(--cor-tinta);
+    margin: 0;
+    padding: 20px;
+    font-family: var(--fonte-corpo);
+    line-height: 1.6;
+}
+
+/* Container principal com margem e borda */
+.jornal-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 30px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Sombra suave */
+    border: 5px solid var(--cor-tinta);
+    border-radius: 2px;
+}
+
+/* Cabeçalho do Jornal */
+.cabecalho {
+    text-align: center;
+    border-bottom: 3px double var(--cor-tinta);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.cabecalho h1 {
+    font-family: var(--fonte-cabecalho);
+    font-size: 3.5em;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.data-e-edicao {
+    font-style: italic;
+    font-size: 0.9em;
+    margin-top: 5px;
+    color: #6a6a6a;
+}
+
+/* Filtro de data */
+.filtro-data {
+    margin-top: 15px;
+    font-family: var(--fonte-corpo);
+}
+
+.filtro-data label {
+    font-size: 0.9em;
+    margin-right: 10px;
+}
+
+.filtro-data input[type="date"],
+.filtro-data button {
+    padding: 5px 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-family: inherit;
+    font-size: 0.9em;
+    background-color: #fff;
+}
+
+
+/* Seção de Notícias (Grid ou Layout de Colunas) */
+.secoes-noticias {
+    /* Layout de colunas para simular um jornal, garantindo que o conteúdo flua */
+    column-count: 2;
+    column-gap: 40px;
+    padding-top: 10px;
+}
+
+/* Estilo de Notícia Individual */
+.noticia {
+    break-inside: avoid-column; /* Previne que o artigo seja dividido entre as colunas */
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+}
+
+.titulo-noticia {
+    font-family: var(--fonte-cabecalho);
+    font-size: 1.5em;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 5px;
+    line-height: 1.2;
+}
+
+.fonte-e-url {
+    font-size: 0.8em;
+    color: #888;
+    margin-bottom: 10px;
+    border-left: 3px solid #ccc;
+    padding-left: 5px;
+}
+
+.link-original {
+    color: #0056b3;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.link-original:hover {
+    text-decoration: underline;
+}
+
+.descricao {
+    text-align: justify;
+    margin-top: 0;
+}
+
+/* Linha Divisória de Estilo Clássico */
+.linha-separadora {
+    height: 1px;
+    background-color: var(--cor-tinta);
+    margin: 15px 0;
+    opacity: 0.3; /* Linha mais suave */
+}
+
+/* Rodapé */
+.rodape {
+    text-align: center;
+    border-top: 1px solid #ccc;
+    padding-top: 15px;
+    margin-top: 30px;
+    font-size: 0.8em;
+    color: #6a6a6a;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 600px) {
+    .secoes-noticias {
+        column-count: 1; /* Apenas uma coluna em dispositivos móveis */
+    }
+    
+    .cabecalho h1 {
+        font-size: 2.5em;
+    }
+
+    .jornal-container {
+        padding: 15px;
+    }
+}

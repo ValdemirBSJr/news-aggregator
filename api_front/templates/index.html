@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O Jornal da Tarde - Edição Especial</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="jornal-container">
+        
+        <header class="cabecalho">
+            <h1>O Jornal da Tarde</h1>
+            <p class="data-e-edicao">{{ dia_da_semana }}, {{ dia }} de {{ mes }} de {{ ano }} | Edição N° {{ edicao }} | R$ 1,50</p>
+            <form method="get" action="{{ url_for('home') }}" class="filtro-data">
+                <label for="date-picker">Filtrar por data:</label>
+                <input type="date" id="date-picker" name="date" value="{{ selected_date }}">
+                <button type="submit">Buscar</button>
+            </form>
+        </header>
+
+        <main class="secoes-noticias">
+            
+            {% if news_items %}
+                {% for item in news_items %}
+                <article class="noticia">
+                    <h2 class="titulo-noticia">{{ item.title | default("Título Desconhecido") }}</h2>
+                    <p class="fonte-e-url">
+                        Fonte: 
+                        <span class="fonte-nome">{{ item.source | default("Desconhecida") }}</span> 
+                        <a href="{{ item.url | default('#') }}" target="_blank" class="link-original">(Leia Mais)</a>
+                    </p>
+                    <p class="descricao">
+                        {{ item.description | default("Nenhuma descrição disponível para esta notícia.") }}
+                    </p>
+                    <div class="linha-separadora"></div>
+                </article>
+                {% endfor %}
+            {% else %}
+                <div class="erro-mensagem">
+                    <p>🚨 Não foi possível carregar as notícias do dia.🚨 </p>
+                </div>
+            {% endif %}
+
+        </main>
+        
+        <footer class="rodape">
+            <p>&copy; {{ ano }} - Todos os direitos reservados. Publicado por W News Network.</p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,57 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: db_postgres
+    env_file: .env
+    environment:
+      - TZ=America/Sao_Paulo
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $POSTGRES_DB -U $POSTGRES_USER"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./database/migrations:/docker-entrypoint-initdb.d
+
+  api_front:
+    build: ./api_front
+    env_file: .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "5010:5010"
+    command: >
+      python main.py
+    volumes:
+      - ./api_front:/app
+
+  newsapi_collector:
+    build: ./collectors/newsapi_collector
+    env_file: .env
+    depends_on:
+      postgres:
+        condition: service_healthy     
+    command: >
+      python3 main.py
+    volumes:
+      - ./collectors/newsapi_collector:/app
+
+
+  worldnews_collector:
+    build: ./collectors/worldnews_collector
+    env_file: .env
+    depends_on:
+      postgres:
+        condition: service_healthy     
+    command: >
+      python3 main.py
+    volumes:
+      - ./collectors/worldnews_collector:/app
+
+
+volumes:
+  pgdata:
