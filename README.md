@@ -2,7 +2,7 @@
 
 **News Aggregator** é um projeto simples que reúne notícias de diferentes fontes (coletores) e expõe uma API/front para consulta. O ambiente padrão utiliza Docker Compose para orquestrar serviços (API, coletores, banco de dados, etc.).
 
-![Uploading Jornal da Tarde.jpeg…]()
+([Jornal da Tarde.jpeg](https://github.com/michelwanderson/news-aggregator/blob/main/Jornal%20da%20Tarde.jpeg))
 
 
 ---
