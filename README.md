@@ -116,7 +116,8 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r api_front/requirements.txt
 pip install -r collectors/newsapi_collector/requirements.txt
-# repetir para outros coletores
+pip install -r collectors/worldnews_collector/requirements.txt
+
 ```
 
 ---
@@ -125,11 +126,16 @@ pip install -r collectors/newsapi_collector/requirements.txt
 
 Crie um `.env` no root do projeto ou exporte as variáveis antes de rodar os serviços localmente. Exemplo de variáveis importantes:
 
-- `POSTGRES_USER`
-- `POSTGRES_PASSWORD`
-- `POSTGRES_DB`
-- `DATABASE_URL` (quando a app usa uma URL única)
-- Chaves para APIs de coletores (ex.: `NEWSAPI_KEY`)
+`POSTGRES_HOST=`
+`POSTGRES_PORT=`
+`POSTGRES_DB=`
+`POSTGRES_USER=`
+`POSTGRES_PASSWORD=`
+`INTERVAL_UPDATE=` # Intervalo de atualização/coleta das noticias
+
+(aqui eu usei dois serviços o [NewsAPI](https://newsapi.org/) e o [WorldNews](https://www.worldnewsapi.com/), portanto:)
+`NEWSAPI_KEY=`
+`WORLDNEWS_API_KEY=`
 
 > Recomendo criar um `.env.example` com nomes de variáveis (sem valores sensíveis) e adicionar `.env` ao `.gitignore`.
 
