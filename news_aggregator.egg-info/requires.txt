@@ -1,5 +1,8 @@
+flask
 fastapi
 uvicorn
 psycopg2-binary
 python-dotenv
-Jinja2
+jinja2
+pydantic
+requests

@@ -1,0 +1,2 @@
+[console_scripts]
+news-aggregator = news_aggregator.cli:main

@@ -17,7 +17,7 @@ services:
       - ./database/migrations:/docker-entrypoint-initdb.d
 
   api_front:
-    build: ./api_front
+    build: ./news_aggregator/api_front
     env_file: .env
     depends_on:
       postgres:
@@ -27,10 +27,10 @@ services:
     command: >
       python main.py
     volumes:
-      - ./api_front:/app
+      - ./news_aggregator/api_front:/app
 
   newsapi_collector:
-    build: ./collectors/newsapi_collector
+    build: ./news_aggregator/collectors/newsapi_collector
     env_file: .env
     depends_on:
       postgres:
@@ -38,11 +38,11 @@ services:
     command: >
       python3 main.py
     volumes:
-      - ./collectors/newsapi_collector:/app
+      - ./news_aggregator/collectors/newsapi_collector:/app
 
 
   worldnews_collector:
-    build: ./collectors/worldnews_collector
+    build: ./news_aggregator/collectors/worldnews_collector
     env_file: .env
     depends_on:
       postgres:
@@ -50,7 +50,7 @@ services:
     command: >
       python3 main.py
     volumes:
-      - ./collectors/worldnews_collector:/app
+      - ./news_aggregator/collectors/worldnews_collector:/app
 
 
 volumes:

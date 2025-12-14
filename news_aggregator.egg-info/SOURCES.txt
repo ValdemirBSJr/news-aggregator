@@ -1,0 +1,13 @@
+README.md
+pyproject.toml
+news_aggregator/__init__.py
+news_aggregator/cli.py
+news_aggregator.egg-info/PKG-INFO
+news_aggregator.egg-info/SOURCES.txt
+news_aggregator.egg-info/dependency_links.txt
+news_aggregator.egg-info/entry_points.txt
+news_aggregator.egg-info/requires.txt
+news_aggregator.egg-info/top_level.txt
+news_aggregator/api_front/main.py
+news_aggregator/collectors/newsapi_collector/main.py
+news_aggregator/collectors/worldnews_collector/main.py
