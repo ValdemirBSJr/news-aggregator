@@ -17,40 +17,40 @@ services:
       - ./database/migrations:/docker-entrypoint-initdb.d
 
   api_front:
-    build: ./news_aggregator/api_front
+    build: 
+      context: .
+      dockerfile: ./news_aggregator/api_front/Dockerfile
     env_file: .env
     depends_on:
       postgres:
         condition: service_healthy
     ports:
       - "5010:5010"
-    command: >
-      python main.py
     volumes:
-      - ./news_aggregator/api_front:/app
+      - ./news_aggregator:/app/news_aggregator
 
   newsapi_collector:
-    build: ./news_aggregator/collectors/newsapi_collector
+    build:
+      context: .
+      dockerfile: ./news_aggregator/collectors/newsapi_collector/Dockerfile
     env_file: .env
     depends_on:
       postgres:
         condition: service_healthy     
-    command: >
-      python3 main.py
     volumes:
-      - ./news_aggregator/collectors/newsapi_collector:/app
+      - ./news_aggregator:/app/news_aggregator
 
 
   worldnews_collector:
-    build: ./news_aggregator/collectors/worldnews_collector
+    build: 
+      context: .
+      dockerfile: ./news_aggregator/collectors/worldnews_collector/Dockerfile
     env_file: .env
     depends_on:
       postgres:
         condition: service_healthy     
-    command: >
-      python3 main.py
     volumes:
-      - ./news_aggregator/collectors/worldnews_collector:/app
+      - ./news_aggregator:/app/news_aggregator
 
 
 volumes:

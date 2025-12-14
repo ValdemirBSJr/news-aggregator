@@ -78,7 +78,7 @@ def collect_once(conn):
         pk = str(uuid.uuid4())
         
         try:
-            print (a)
+            #print (a)
             cur.execute(insert_sql, (pk, "newsapi", title, desc, link, published, content))
         except Exception as e:
             print("insert error", e)
@@ -89,13 +89,12 @@ if __name__ == "__main__":
     print (fetch_newsapi())
     if not NEWSAPI_KEY:
         raise SystemExit("Please set NEWSAPI_KEY in environment")
-if __name__ == "__main__":
-
-    print (fetch_newsapi())
+def run_collector_loop():
+    print("Starting NewsAPI collector loop...")
     if not NEWSAPI_KEY:
-        raise SystemExit("Please set NEWSAPI_KEY in environment")
-    
-    # Use our connection wrapper
+        print("NewsAPI key not set, skipping collector.")
+        return
+
     try:
         conn = connection.get_db_connection()
         while True:
@@ -104,9 +103,9 @@ if __name__ == "__main__":
                 collect_once(conn)
             except Exception as e:
                 print("collector error", e)
-                # Re-connect if connection lost?
-                # For simplicity, if fatal error, maybe we crash or retry connection. 
-                # connection.get_db_connection returns new conn if needed but here we hold it.
             time.sleep(TIME_UPDATE)
     except Exception as e:
-        print(f"Fatal error: {e}") 
+        print(f"Fatal error: {e}")
+
+if __name__ == "__main__":
+    run_collector_loop() 

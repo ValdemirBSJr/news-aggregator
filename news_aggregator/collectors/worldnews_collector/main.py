@@ -74,21 +74,23 @@ def collect_once(conn):
             print("insert error", e)
     conn.commit()
 
-if __name__ == "__main__":
-
-    print("Starting WorldNews collector...")
+def run_collector_loop():
+    print("Starting WorldNews collector loop...")
     if not WORLDNEWS_KEY:
-        raise SystemExit("Please set WORLDNEWS_KEY in environment")
+        print("WorldNews key not set, skipping collector.")
+        return
     
     try:
         conn = connection.get_db_connection()
         while True:
             try:
-                # collect_once prints results? removed duplicate print from original code
                 collect_once(conn)
                 print(f"[WorldNews] collecting at {datetime.utcnow().isoformat()}")
             except Exception as e:
                 print("collector error", e)
             time.sleep(TIME_UPDATE)
     except Exception as e:
-         print(f"Fatal error: {e}") 
+         print(f"Fatal error: {e}")
+
+if __name__ == "__main__":
+    run_collector_loop() 
