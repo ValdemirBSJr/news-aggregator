@@ -42,8 +42,13 @@
 
                 <!-- AI Actions -->
                 <div class="acoes-jornal">
+                    {% if item.show_translate %}
                     <button class="btn-jornal" onclick="translateArticle('{{ item.id }}')">[Traduzir]</button>
+                    {% endif %}
+
+                    {% if item.show_related %}
                     <button class="btn-jornal" onclick="toggleRelated('{{ item.id }}')">[Ver Relacionadas]</button>
+                    {% endif %}
                 </div>
 
                 <!-- Related Container -->
