@@ -12,19 +12,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+from news_aggregator.database import connection
+import uuid
+
+# Load dotenv logic is in main block or common lib, assumed loaded.
+
 WORLDNEWS_KEY = os.getenv("WORLDNEWS_KEY")
-DB_DSN = (
-    f"host={os.getenv('POSTGRES_HOST')} port={os.getenv('POSTGRES_PORT',5432)} "
-    f"dbname={os.getenv('POSTGRES_DB')} user={os.getenv('POSTGRES_USER')} password={os.getenv('POSTGRES_PASSWORD')}"
-)
 
 BASE_URL = "https://api.worldnewsapi.com/search-news"
-INSERT_SQL = """
-    INSERT INTO news_raw (source, title, description, url, published_at, content)
-    VALUES (%s, %s, %s, %s, %s, %s)
-    ON CONFLICT (url) DO NOTHING;
-"""
-
 
 TIME_UPDATE = int(os.getenv('INTERVAL_UPDATE', 10800))
 
@@ -53,14 +48,27 @@ def parse_published(value):
 def collect_once(conn):
     items = fetch_worldnews()
     cur = conn.cursor()
+    
+    # Placeholder logic
+    placeholder = "?" if connection.get_db_type() == 'sqlite' else "%s"
+    
+    insert_sql = f"""
+        INSERT INTO news_raw (id, source, title, description, url, published_at, content)
+        VALUES ({placeholder}, {placeholder}, {placeholder}, {placeholder}, {placeholder}, {placeholder}, {placeholder})
+        ON CONFLICT (url) DO NOTHING;
+    """
+    
     for a in items:
         title = a.get("title")
         desc = a.get("text") or a.get("description")
         link = a.get("url")
         published = parse_published(a.get("publish_date") or a.get("publishedAt") or a.get("published"))
         content = (a.get("text") or desc) or ""
+        
+        pk = str(uuid.uuid4())
+        
         try:
-            cur.execute(INSERT_SQL, ("worldnews", title, desc, link, published, content))
+            cur.execute(insert_sql, (pk, "worldnews", title, desc, link, published, content))
             print ("Inserido no Banco")
         except Exception as e:
             print("insert error", e)
@@ -72,12 +80,15 @@ if __name__ == "__main__":
     if not WORLDNEWS_KEY:
         raise SystemExit("Please set WORLDNEWS_KEY in environment")
     
-    with psycopg2.connect(DB_DSN) as conn:
+    try:
+        conn = connection.get_db_connection()
         while True:
             try:
+                # collect_once prints results? removed duplicate print from original code
                 collect_once(conn)
                 print(f"[WorldNews] collecting at {datetime.utcnow().isoformat()}")
-                print (collect_once(conn))
             except Exception as e:
                 print("collector error", e)
-            time.sleep(TIME_UPDATE) 
+            time.sleep(TIME_UPDATE)
+    except Exception as e:
+         print(f"Fatal error: {e}") 
