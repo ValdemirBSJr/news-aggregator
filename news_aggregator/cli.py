@@ -2,15 +2,14 @@ from news_aggregator.api_front.main import app
 from news_aggregator.collectors.newsapi_collector.main import run_collector_loop as run_newsapi
 from news_aggregator.collectors.worldnews_collector.main import run_collector_loop as run_worldnews
 import threading
-import os
 from news_aggregator.ai import analyzers
 
 def preload_models():
     """Carrega modelos Spacy em background para nao travar o primeiro request."""
-    print("Pre-loading AI models (Light)...")
+    print("Pre-carregamento dos modelos spacy...")
     analyzers.get_model('en')
     analyzers.get_model('pt')
-    print("AI models loaded.")
+    print("Modelos spacy carregados.")
 
 def main():
     """Função principal que inicia a aplicação e os coletores (modo local).

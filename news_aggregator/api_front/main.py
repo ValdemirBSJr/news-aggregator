@@ -10,7 +10,7 @@ from news_aggregator.ai import analyzers, llm
 app = Flask(__name__)
 
 # --- Configurações do Banco de Dados ---
-# Usamos o connection.py agora
+# Usamos o connection.py
 
 def get_news_from_db(target_date: date):
     """Conecta ao Banco (PG ou SQLite) e busca notícias."""
@@ -35,8 +35,7 @@ def get_news_from_db(target_date: date):
             query = "SELECT id, title, source, url, description, content FROM news_raw WHERE published_at::date = %s ORDER BY published_at DESC LIMIT 20;"
             cur.execute(query, (target_date,))
         else:
-            # SQLite e Postgres placeholder logic handled by query adaptability if explicitly coded, 
-            # here we use hardcoded logic because the code block logic diverged in previous edits.
+            # SQLite e Postgres placeholder logic tratada por query adaptability se explicitamente codificado
             query = "SELECT id, title, source, url, description, content FROM news_raw WHERE date(published_at) = ? ORDER BY published_at DESC LIMIT 20;"
             cur.execute(query, (target_date.strftime("%Y-%m-%d"),))
 
@@ -61,7 +60,9 @@ def get_news_from_db(target_date: date):
     return noticias
 
 def get_candidate_news(limit=50):
-    """Fetch recent news to compare against."""
+    """
+    Noticias mais recentes para comparação.
+    """
     conn = connection.get_db_connection()
     try:
         if connection.get_db_type() == 'postgres':
@@ -70,7 +71,7 @@ def get_candidate_news(limit=50):
              conn.row_factory = sqlite3.Row
              cur = conn.cursor()
              
-        # Fetch last N items for comparison (title + description + content)
+        # Pega as notícias mais recentes para comparação
         query = "SELECT id, title, description, content, published_at, url FROM news_raw ORDER BY published_at DESC LIMIT %s"
         query = connection.convert_param_style(query)
         cur.execute(query, (limit,))
@@ -112,27 +113,24 @@ def home():
 
     noticias = get_news_from_db(selected_date)
     
-    # --- Lógica de IA para Botões (Pre-calculated) ---
+    # Para lógica da IA, vamos pegar os dados previamente calculados
     # Para performance, pegamos candidatos uma vez só
     candidates = get_candidate_news(limit=50)
     
     for item in noticias:
-        # 1. Translate logic: Show if title/content looks English
+        # Verifica se o título ou descrição parece inglês
         title = item.get('title', '')
         description = item.get('description', '') or ''
-        # Better: use analyzers.detect_language on combined text
         lang = analyzers.detect_language(f"{title} {description}")
         item['show_translate'] = (lang == 'en')
         
-        # 2. Related logic: Show if has strong correlation (>0.7)
-        # We need to exclude itself from candidates
-        # Optimization: analyzers.find_related checks first.
-        # Construct text for comparison
+        # Constroi esquema para verificação do idioma
         item_text = f"{item.get('title', '')} {item.get('description', '')}"
         
-        # Filter candidates excluding self
+        # Filtra candidatos excluindo o item atual
         others = [c for c in candidates if str(c.get('id')) != str(item.get('id'))]
         
+        # Verifica se o item tem relação com os candidatos
         related = analyzers.find_related_news(item_text, others, limit=1, threshold=0.8)
         item['show_related'] = (len(related) > 0)
 
@@ -171,15 +169,15 @@ def api_related():
     if not current_article:
         return {"error": "Article not found"}, 404
         
-    # Get text to compare
+    # Pega texto para comparar
     current_text = f"{current_article.get('title', '')} {current_article.get('description', '')} {current_article.get('content', '')}"
     
-    # Get candidates 
-    all_news = get_candidate_news(limit=50) # Keep it fast
-    # Filter out self
+    # Pega candidatos
+    all_news = get_candidate_news(limit=50)
+    # Filtra candidatos excluindo o item atual
     candidates = [n for n in all_news if str(n.get('id')) != str(article_id)]
     
-    # Find related
+    # Encontra notícias relacionadas
     related = analyzers.find_related_news(current_text, candidates, limit=3, threshold=0.8)
     
     if not related:
@@ -188,11 +186,11 @@ def api_related():
             "links": []
         }
     
-    # Summarize related content
+    # Sumariza o conteudo
     texts_to_summarize = [f"{r.get('title')}: {r.get('description') or r.get('content') or ''}" for r in related]
     summary = llm.generate_summary(texts_to_summarize)
     
-    # Format links
+    # Formata links
     links = []
     for r in related:
         links.append({

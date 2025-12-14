@@ -2,12 +2,12 @@ import spacy
 import logging
 import warnings
 
-# Suppress "no word vectors" warning for small models
+# Suprime o aviso "no word vectors" para modelos pequenos(no caso substitui o md por sml para maior rapidez)
 warnings.filterwarnings("ignore", message=r".*\[W007\].*")
 
 logger = logging.getLogger(__name__)
 
-# Cache models to avoid reloading
+# Constantes de Modelos em cache para evitar reload
 _nlp_en = None
 _nlp_pt = None
 
@@ -15,20 +15,20 @@ def get_model(lang='pt'):
     global _nlp_en, _nlp_pt
     if lang == 'en':
         if _nlp_en is None:
-            logger.info("Loading Spacy EN model (SM)...")
+            logger.info("Carregando Spacy EN model (SM)...")
             try:
                 _nlp_en = spacy.load("en_core_web_sm")
             except Exception as e:
-                logger.error(f"Error loading EN model: {e}")
+                logger.error(f"Erro ao carregar EN model: {e}")
                 return None
         return _nlp_en
     else:
         if _nlp_pt is None:
-            logger.info("Loading Spacy PT model (SM)...")
+            logger.info("Carregando Spacy PT model (SM)...")
             try:
                 _nlp_pt = spacy.load("pt_core_news_sm")
             except Exception as e:
-                logger.error(f"Error loading PT model: {e}")
+                logger.error(f"Erro ao carregar PT model: {e}")
                 return None
         return _nlp_pt
 
@@ -36,8 +36,8 @@ import re
 
 def detect_language(text):
     """
-    Heuristic using stopword density.
-    Compares coverage of EN vs PT common words.
+    Heurística usando densidade de stop words.
+    Compara cobertura de palavras comuns EN vs PT.
     """
     if not text:
         return 'pt'
@@ -68,19 +68,19 @@ def detect_language(text):
         "foi", "foram", "era", "eram", "é", "são", "está", "estão"
     }
     
-    # Count intersections
+    # Conta as stop words
     score_en = len(words.intersection(stops_en))
     score_pt = len(words.intersection(stops_pt))
     
-    # Bias slightly towards PT if tie/zero, but if EN > PT return EN
+    # Se empate ou zero, prioriza PT
     if score_en > score_pt:
         return 'en'
     return 'pt'
 
 def find_related_news(current_text, candidate_items, threshold=0.8, limit=3):
     """
-    Finds news in candidate_items that are semantically similar to current_text.
-    candidate_items: list of dicts (id, title, content, ...)
+    Busca as notícias mais similares ao texto atual. candidate_items deve conter
+    pelo menos o id, title e description.
     """
     if not current_text:
         return []
@@ -96,8 +96,8 @@ def find_related_news(current_text, candidate_items, threshold=0.8, limit=3):
     related = []
     
     for item in candidate_items:
-        # Check title + description + content
-        # For speed, maybe just title + description
+        # Verifica title + description + content
+        # Para velocidade, pode ser apenas title + description
         text = f"{item.get('title', '')} {item.get('description', '')}"
         if not text.strip():
             continue
@@ -111,7 +111,7 @@ def find_related_news(current_text, candidate_items, threshold=0.8, limit=3):
                 "score": similarity
             })
             
-    # Sort by score desc
+    # Ordena por score desc
     related.sort(key=lambda x: x['score'], reverse=True)
     
     return [r['item'] for r in related[:limit]]

@@ -4,7 +4,7 @@ import subprocess
 import venv
 
 VENV_DIRETORIO = "venv"
-NOME_ENTRY_POINT = "news-aggregator"  # O nome do comando definido no setup.py
+NOME_ENTRY_POINT = "news-aggregator"
 
 
 def obter_caminhos_venv():
@@ -37,7 +37,7 @@ def instalador_pacotes_via_setup():
 
     # Este comando lê o pyproject.toml, instala as dependências
     # listadas em 'install_requires' e cria o 'entry_point'.
-    # Usar '-e' (editável) é ótimo para desenvolvimento.
+    # Usar '-e' (editável).
     comando = [python_exe, "-m", "pip", "install", "--quiet", "-e", "."]
 
     print(f"Executando: {' '.join(comando)}")
@@ -52,7 +52,6 @@ def rodar_script_via_entrypoint():
 
     python_exe, scripts_dir = obter_caminhos_venv()
 
-    # O entry point estará no diretório de scripts do venv
     if os.name == "nt":
         # No Windows, pode ser .exe, .cmd ou um script sem extensão
         comando_app = os.path.join(scripts_dir, f"{NOME_ENTRY_POINT}.exe")
@@ -88,9 +87,6 @@ def checa_configura_env():
             sys.exit(1)
     else:
         print("✅ Ambiente virtual já existe.")
-        # Você pode adicionar uma lógica aqui para reinstalar
-        # ou atualizar dependências se desejar.
-        # Por enquanto, vamos assumir que está tudo OK.
 
 
 if __name__ == "__main__":

@@ -21,11 +21,6 @@ NEWSAPI_KEY = os.getenv("NEWSAPI_KEY")
 
 BASE_URL = "https://newsapi.org/v2/top-headlines"
 
-# SQL Generico (placeholders serao ajustados)
-# Postgres supporta ON CONFLICT (url) DO NOTHING
-# SQLite suporte ON CONFLICT(url) DO NOTHING
-# A sintaxe é compativel.
-# Porem o placeholder é diferente.
 
 TIME_UPDATE = int(os.getenv('INTERVAL_UPDATE', 10800))
 

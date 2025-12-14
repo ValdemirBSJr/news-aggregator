@@ -21,7 +21,7 @@ def get_db_type():
 def _init_sqlite(db_path="news.db"):
     """Inicializa o banco de dados SQLite com o schema."""
     conn = sqlite3.connect(db_path)
-    conn.row_factory = sqlite3.Row  # Access columns by name
+    conn.row_factory = sqlite3.Row  # Acessa a coluna pelo nome
     cur = conn.cursor()
     
     # SQLite schema - Levemente diferente do Postgres

@@ -1,23 +1,20 @@
 """
-World News API collector: fetch news filtered by country and insert into news_raw.
+World News API collector: pega as notícias do World News API e insere no news_raw.
 API docs: https://worldnewsapi.com/
-Run periodically.
+Roda periodicamente (cron loop).
 """
 import os
 import time
 import requests
-import psycopg2
 from datetime import datetime
+from news_aggregator.database import connection
+import uuid
 from dotenv import load_dotenv
 
 load_dotenv()
 
-from news_aggregator.database import connection
-import uuid
 
-# Load dotenv logic is in main block or common lib, assumed loaded.
-
-# Match the variable name in .env.example (WORLDNEWS_API_KEY)
+# Vamos carregar as chaves de api das noticias
 WORLDNEWS_KEY = os.getenv("WORLDNEWS_API_KEY") or os.getenv("WORLDNEWS_KEY")
 
 BASE_URL = "https://api.worldnewsapi.com/search-news"
@@ -70,13 +67,13 @@ def collect_once(conn):
             cur.execute(insert_sql, (pk, "worldnews", title, desc, link, published, content))
             print ("Inserido no Banco")
         except Exception as e:
-            print("insert error", e)
+            print("Erro ao inserir no banco: ", e)
     conn.commit()
 
 def run_collector_loop():
-    print("Starting WorldNews collector loop...")
+    print("[INFO] Iniciando loop do coletor WorldNews...")
     if not WORLDNEWS_KEY:
-        print("WorldNews key not set, skipping collector.")
+        print("[ERROR] Chave do WorldNews não configurada, pulando o coletor.")
         return
     
     try:
@@ -84,12 +81,12 @@ def run_collector_loop():
         while True:
             try:
                 collect_once(conn)
-                print(f"[WorldNews] collecting at {datetime.utcnow().isoformat()}")
+                print(f"[INFO] WorldNews coletando em: {datetime.utcnow().isoformat()}")
             except Exception as e:
-                print("collector error", e)
+                print("[ERROR] Erro do coletor: ", e)
             time.sleep(TIME_UPDATE)
     except Exception as e:
-         print(f"Fatal error: {e}")
+         print(f"[ERROR] Erro fatal: {e}")
 
 if __name__ == "__main__":
     run_collector_loop() 

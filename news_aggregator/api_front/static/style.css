@@ -4,8 +4,10 @@
 
 /* Cores e Fontes */
 :root {
-    --cor-papel: #f7f3e8; /* Creme ou SépiA */
-    --cor-tinta: #2c2c2c; /* Preto quase escuro */
+    --cor-papel: #f7f3e8;
+    /* Creme ou SépiA */
+    --cor-tinta: #2c2c2c;
+    /* Preto quase escuro */
     --fonte-cabecalho: 'Roboto Slab', serif;
     --fonte-corpo: 'Merriweather', serif;
 }
@@ -26,7 +28,8 @@ body {
     margin: 0 auto;
     background-color: white;
     padding: 30px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Sombra suave */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    /* Sombra suave */
     border: 5px solid var(--cor-tinta);
     border-radius: 2px;
 }
@@ -86,7 +89,8 @@ body {
 
 /* Estilo de Notícia Individual */
 .noticia {
-    break-inside: avoid-column; /* Previne que o artigo seja dividido entre as colunas */
+    break-inside: avoid-column;
+    /* Previne que o artigo seja dividido entre as colunas */
     margin-bottom: 20px;
     padding-bottom: 10px;
 }
@@ -128,7 +132,8 @@ body {
     height: 1px;
     background-color: var(--cor-tinta);
     margin: 15px 0;
-    opacity: 0.3; /* Linha mais suave */
+    opacity: 0.3;
+    /* Linha mais suave */
 }
 
 /* Rodapé */
@@ -144,9 +149,10 @@ body {
 /* Responsividade para telas menores */
 @media (max-width: 600px) {
     .secoes-noticias {
-        column-count: 1; /* Apenas uma coluna em dispositivos móveis */
+        column-count: 1;
+        /* Apenas uma coluna em dispositivos móveis */
     }
-    
+
     .cabecalho h1 {
         font-size: 2.5em;
     }
@@ -154,4 +160,53 @@ body {
     .jornal-container {
         padding: 15px;
     }
+}
+
+/* Estilos para tradução e correlações */
+.acoes-jornal {
+    margin-top: 10px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9em;
+}
+
+.btn-jornal {
+    background: none;
+    border: none;
+    color: #333;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0 5px;
+    font-weight: bold;
+}
+
+.btn-jornal:hover {
+    color: #000;
+    background-color: #f0f0f0;
+}
+
+.secao-relacionadas {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-left: 3px solid #333;
+    font-family: 'Times New Roman', serif;
+}
+
+.resumo-ai {
+    font-style: italic;
+    margin-bottom: 10px;
+}
+
+.lista-relacionadas ul {
+    list-style-type: square;
+    padding-left: 20px;
+}
+
+.lista-relacionadas li {
+    margin-bottom: 5px;
+}
+
+.loading-text {
+    color: #666;
+    font-family: monospace;
 }

@@ -15,13 +15,13 @@ class GroqClient:
             cls._instance = super(GroqClient, cls).__new__(cls)
             api_key = os.getenv("GROQ_API_KEY")
             if not api_key:
-                logger.warning("GROQ_API_KEY not set. AI features will fail.")
+                logger.warning("Chave Groq não configurada. AI features will fail.")
                 cls._instance.client = None
             else:
                 try:
                     cls._instance.client = Groq(api_key=api_key)
                 except Exception as e:
-                    logger.error(f"Failed to initialize Groq client: {e}")
+                    logger.error(f"Erro ao inicializar Groq client: {e}")
                     cls._instance.client = None
         return cls._instance
 
@@ -36,8 +36,8 @@ class GroqClient:
         if not texts:
             return ""
 
-        # Combine texts (truncate to avoid potential token limits if needed, though pure text usually fits)
-        combined_text = "\n\n".join(texts)[:15000] # Safe limit heuristic
+        # Combina textos (trunca para evitar limites potenciais de tokens se necessário, embora o texto puro geralmente caiba)
+        combined_text = "\n\n".join(texts)[:15000] # Heurística de limite seguro
 
         prompt = (
             f"Analise as seguintes notícias e escreva um resumo consolidado em {lang}. "
@@ -54,12 +54,12 @@ class GroqClient:
                         "content": prompt,
                     }
                 ],
-                model="llama-3.3-70b-versatile", # Fast and good enough
+                model="llama-3.3-70b-versatile", # modelo mais rapido
                 temperature=0.5,
             )
             return chat_completion.choices[0].message.content
         except Exception as e:
-            logger.error(f"Groq summary error: {e}")
+            logger.error(f"Erro ao gerar resumo: {e}")
             return f"Erro ao gerar resumo: {e}"
 
     def translate_content(self, text, target_lang='pt'):
@@ -89,10 +89,10 @@ class GroqClient:
             )
             return chat_completion.choices[0].message.content
         except Exception as e:
-            logger.error(f"Groq translation error: {e}")
+            logger.error(f"Erro ao traduzir: {e}")
             return f"Erro ao traduzir: {e}"
 
-# Global instance helper
+# Helper de instancia global
 _client = GroqClient()
 
 def generate_summary(texts):

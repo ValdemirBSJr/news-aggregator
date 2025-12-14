@@ -40,7 +40,7 @@
                     {{ item.description | default("Nenhuma descrição disponível para esta notícia.") }}
                 </p>
 
-                <!-- AI Actions -->
+                <!-- AI AÇOES -->
                 <div class="acoes-jornal">
                     {% if item.show_translate %}
                     <button class="btn-jornal" onclick="translateArticle('{{ item.id }}')">[Traduzir]</button>
@@ -53,7 +53,7 @@
 
                 <!-- Related Container -->
                 <div id="related-{{ item.id }}" class="secao-relacionadas" style="display: none;">
-                    <p class="loading-text">Consultando arquivos...</p>
+                    <p class="loading-text">Consultando notícias...</p>
                 </div>
 
                 <div class="linha-separadora"></div>
@@ -72,56 +72,6 @@
         </footer>
     </div>
 
-    <style>
-        /* Estilos adicionais para recursos IA - mantendo tema jornal */
-        .acoes-jornal {
-            margin-top: 10px;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 0.9em;
-        }
-
-        .btn-jornal {
-            background: none;
-            border: none;
-            color: #333;
-            cursor: pointer;
-            text-decoration: underline;
-            padding: 0 5px;
-            font-weight: bold;
-        }
-
-        .btn-jornal:hover {
-            color: #000;
-            background-color: #f0f0f0;
-        }
-
-        .secao-relacionadas {
-            margin-top: 15px;
-            padding: 10px;
-            background-color: #f9f9f9;
-            border-left: 3px solid #333;
-            font-family: 'Times New Roman', serif;
-        }
-
-        .resumo-ai {
-            font-style: italic;
-            margin-bottom: 10px;
-        }
-
-        .lista-relacionadas ul {
-            list-style-type: square;
-            padding-left: 20px;
-        }
-
-        .lista-relacionadas li {
-            margin-bottom: 5px;
-        }
-
-        .loading-text {
-            color: #666;
-            font-family: monospace;
-        }
-    </style>
 
     <script>
         async function translateArticle(id) {
@@ -170,7 +120,7 @@
 
                         let html = '';
                         if (data.summary) {
-                            html += `<div class="resumo-ai"><strong>Resumo dos Arquivos:</strong> ${data.summary}</div>`;
+                            html += `<div class="resumo-ai"><strong>Resumo das notícias:</strong> ${data.summary}</div>`;
                         }
 
                         if (data.links && data.links.length > 0) {
@@ -180,14 +130,14 @@
                             });
                             html += `</ul></div>`;
                         } else {
-                            html += `<p>Nenhuma correlação encontrada nos arquivos recentes.</p>`;
+                            html += `<p>Nenhuma correlação encontrada nas notícias recentes.</p>`;
                         }
 
                         container.innerHTML = html;
                         container.dataset.loaded = "true";
 
                     } catch (e) {
-                        container.innerHTML = "<p>Erro ao consultar arquivos.</p>";
+                        container.innerHTML = "<p>Erro ao consultar notícias.</p>";
                         console.error(e);
                     }
                 }
