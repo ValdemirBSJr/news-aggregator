@@ -16,7 +16,10 @@ dependencies = [
     "python-dotenv",
     "jinja2",
     "pydantic",
-    "requests"
+    "requests",
+    "spacy",
+    "groq",
+    "beautifulsoup4"
 ]
 
 [project.scripts]

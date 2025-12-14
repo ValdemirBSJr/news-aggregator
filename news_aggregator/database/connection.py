@@ -4,29 +4,27 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import logging
 
-# Configure basic logging
+# Configura um log básico para tracert da app
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Global flag to track which DB we are using
+# Flag global para vermos qual db vamos usar
 _DB_TYPE = None
 
 def get_db_type():
-    """Returns 'postgres' or 'sqlite'."""
+    """Retorna 'postgres' ou 'sqlite'."""
     global _DB_TYPE
     if _DB_TYPE is None:
-        get_db_connection().close() # Init and check
+        get_db_connection().close()
     return _DB_TYPE
 
 def _init_sqlite(db_path="news.db"):
-    """Initialize SQLite database with the schema."""
+    """Inicializa o banco de dados SQLite com o schema."""
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row  # Access columns by name
     cur = conn.cursor()
     
-    # SQLite schema - slightly different from Postgres
-    # UUID generation in SQLite usually handled by application or ignoring it for simple auto-inc, 
-    # but here we keep UUID as text or generate it in python.
+    # SQLite schema - Levemente diferente do Postgres
     cur.execute("""
     CREATE TABLE IF NOT EXISTS news_raw (
         id TEXT PRIMARY KEY,
@@ -44,15 +42,14 @@ def _init_sqlite(db_path="news.db"):
 
 def get_db_connection():
     """
-    Tries to connect to PostgreSQL using environment variables.
-    If it fails (vars missing or connection refused), falls back to SQLite.
+    Tenta conectar ao PostgreSQL usando variáveis de ambiente.
+    Se falhar (vars missing or connection refused), falls back para SQLite.
     """
     global _DB_TYPE
     
-    # 1. Try Postgres
+    # Tentamos o postgres
     pg_host = os.getenv('POSTGRES_HOST')
-    # Simple heuristic: if no host configured, don't even try (fast fail to sqlite)
-    # But user asked to verify service. So we interpret "verify" as "try authenticate".
+    # Verificamos se nao existe a variavel do postgres no container.
     
     if pg_host:
         try:
@@ -63,7 +60,7 @@ def get_db_connection():
                 f"user={os.getenv('POSTGRES_USER')} "
                 f"password={os.getenv('POSTGRES_PASSWORD')}"
             )
-            # Short timeout to avoid hanging if IP is wrong but reachable
+            # verificamos se o ip do postgres esta acessivel.
             conn = psycopg2.connect(dsn, connect_timeout=3)
             if _DB_TYPE is None:
                 logger.info("✅ Connected to PostgreSQL.")
@@ -73,7 +70,7 @@ def get_db_connection():
             if _DB_TYPE is None:
                 logger.warning(f"⚠️ PostgreSQL unavailable ({e}). ⚠️\n👉 Falling back to SQLite (local mode).")
     
-    # 2. Fallback to SQLite
+    # Se nao existir o postgres, usamos o sqlite(execução local)
     if _DB_TYPE is None:
         logger.info("Using SQLite database (news.db).")
         _DB_TYPE = 'sqlite'
@@ -82,7 +79,7 @@ def get_db_connection():
 
 def convert_param_style(sql):
     """
-    Converts Postgres style (%s) to SQLite style (?) if needed.
+    Converte o estilo de paramentro do postgres para sqlite, caso necessario.
     """
     if get_db_type() == 'sqlite':
         return sql.replace('%s', '?')

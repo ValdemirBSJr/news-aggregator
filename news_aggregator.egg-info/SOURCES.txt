@@ -8,6 +8,10 @@ news_aggregator.egg-info/dependency_links.txt
 news_aggregator.egg-info/entry_points.txt
 news_aggregator.egg-info/requires.txt
 news_aggregator.egg-info/top_level.txt
+news_aggregator/ai/__init__.py
+news_aggregator/ai/analyzers.py
+news_aggregator/ai/llm.py
 news_aggregator/api_front/main.py
 news_aggregator/collectors/newsapi_collector/main.py
 news_aggregator/collectors/worldnews_collector/main.py
+news_aggregator/database/connection.py

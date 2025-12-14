@@ -14,13 +14,18 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./database/migrations:/docker-entrypoint-initdb.d
+      - ./news_aggregator/database/migrations:/docker-entrypoint-initdb.d
 
   api_front:
     build: 
       context: .
       dockerfile: ./news_aggregator/api_front/Dockerfile
     env_file: .env
+    environment:
+      - POSTGRES_HOST=postgres
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     depends_on:
       postgres:
         condition: service_healthy
@@ -34,6 +39,11 @@ services:
       context: .
       dockerfile: ./news_aggregator/collectors/newsapi_collector/Dockerfile
     env_file: .env
+    environment:
+      - POSTGRES_HOST=postgres
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     depends_on:
       postgres:
         condition: service_healthy     
@@ -46,6 +56,11 @@ services:
       context: .
       dockerfile: ./news_aggregator/collectors/worldnews_collector/Dockerfile
     env_file: .env
+    environment:
+      - POSTGRES_HOST=postgres
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     depends_on:
       postgres:
         condition: service_healthy     

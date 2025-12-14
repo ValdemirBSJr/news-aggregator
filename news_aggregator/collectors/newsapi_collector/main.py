@@ -1,24 +1,23 @@
 """
-NewsAPI collector: fetch top headlines for Brazil and insert into news_raw.
-Run periodically (cron/container loop).
+NewsApi collector: pega os headlines do Brazil e inserre no news_raw. 
+Roda periodicamente (cron loop)
+
 """
 import os
 import time
 import requests
-import psycopg2
 from datetime import datetime
 from dotenv import load_dotenv
-
-load_dotenv()
-
 from news_aggregator.database import connection
 import uuid
 
-# Remove direct load_dotenv and os.getenv for DB here, handled by connection
-# But NEWSAPI_KEY and INTERVAL still needed.
+load_dotenv()
+
+
+
 
 NEWSAPI_KEY = os.getenv("NEWSAPI_KEY")
-# DB_DSN removido
+
 
 BASE_URL = "https://newsapi.org/v2/top-headlines"
 
@@ -54,7 +53,7 @@ def collect_once(conn):
     articles = fetch_newsapi()
     cur = conn.cursor()
     
-    # Get SQL with correct placeholders
+    # Pega SQL com os placeholders corretos
     # PG: %s, SQLite: ?
     placeholder = "?" if connection.get_db_type() == 'sqlite' else "%s"
     
@@ -72,23 +71,18 @@ def collect_once(conn):
         content = a.get("content") or desc or ""
         
         # ID gen
-        # Postgres has default uuid_generate_v4(). SQLite does not.
-        # So we generate UUID in python if using SQLite, OR if using Postgres (to be safe/uniform)
-        # Actually our PG schema has default. But if we provide it, it overrides.
+        # Postgres tem por padrão uuid_generate_v4(). SQLite não tem.
+        # Então caso seja sqlite, vamos gerar para ele
         pk = str(uuid.uuid4())
         
         try:
-            #print (a)
+            #print (a) # debug das noticias no terminal
             cur.execute(insert_sql, (pk, "newsapi", title, desc, link, published, content))
         except Exception as e:
             print("insert error", e)
     conn.commit()
 
-if __name__ == "__main__":
 
-    print (fetch_newsapi())
-    if not NEWSAPI_KEY:
-        raise SystemExit("Please set NEWSAPI_KEY in environment")
 def run_collector_loop():
     print("Starting NewsAPI collector loop...")
     if not NEWSAPI_KEY:

@@ -17,7 +17,8 @@ import uuid
 
 # Load dotenv logic is in main block or common lib, assumed loaded.
 
-WORLDNEWS_KEY = os.getenv("WORLDNEWS_KEY")
+# Match the variable name in .env.example (WORLDNEWS_API_KEY)
+WORLDNEWS_KEY = os.getenv("WORLDNEWS_API_KEY") or os.getenv("WORLDNEWS_KEY")
 
 BASE_URL = "https://api.worldnewsapi.com/search-news"
 
@@ -33,8 +34,6 @@ def fetch_worldnews(country="br", number=10):
     r = requests.get(BASE_URL, params=params, timeout=10)
     r.raise_for_status()
     data = r.json()
-    # docs may vary; the scaffold earlier used key 'news'
-    # try both common shapes:
     return data.get("news") or data.get("articles") or []
 
 def parse_published(value):
@@ -49,7 +48,7 @@ def collect_once(conn):
     items = fetch_worldnews()
     cur = conn.cursor()
     
-    # Placeholder logic
+    # Logica do placeholder sqlite
     placeholder = "?" if connection.get_db_type() == 'sqlite' else "%s"
     
     insert_sql = f"""

@@ -5,12 +5,10 @@ import threading
 import os
 
 def main():
-    """Função principal que inicia a aplicação e os coletores (modo local)."""
+    """Função principal que inicia a aplicação e os coletores (modo local).
+       Em modo container (server), os coletores rodam em containers separados.
+    """
     
-    # Inicia coletores em threads background (daemon=True morrem quando o app fecha)
-    # Isso é ideal para o modo local simplificado. 
-    # Em produção via Docker, os serviços rodam separados e esse script do Flask roda isolado
-    # (mas no Docker este script não é chamado para os coletores, e sim main.py direto deles)
     
     print("Iniciando coletores em background...")
     t1 = threading.Thread(target=run_newsapi, daemon=True)
@@ -22,8 +20,8 @@ def main():
     print("Iniciando News Aggregator Web App...")
     # debug=True do Flask pode causar reload e duplicar threads se não cuidar, 
     # use_reloader=False ajuda a evitar duplicidade em dev simples,
-    # mas remove o hot-reload. Vamos deixar padrão por enquanto.
-    app.run(debug=True, host='0.0.0.0', port=5010, use_reloader=False)
+    # mas remove o hot-reload.
+    app.run(debug=False, host='0.0.0.0', port=5010, use_reloader=False)
 
 if __name__ == "__main__":
     main()

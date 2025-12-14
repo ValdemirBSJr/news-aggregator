@@ -12,6 +12,9 @@ Requires-Dist: python-dotenv
 Requires-Dist: jinja2
 Requires-Dist: pydantic
 Requires-Dist: requests
+Requires-Dist: spacy
+Requires-Dist: groq
+Requires-Dist: beautifulsoup4
 
 # News Aggregator 📰
 
