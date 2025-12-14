@@ -64,7 +64,6 @@ def collect_once(conn):
 
 if __name__ == "__main__":
 
-    print (fetch_newsapi())
     if not NEWSAPI_KEY:
         raise SystemExit("Please set NEWSAPI_KEY in environment")
     with psycopg2.connect(DB_DSN) as conn:
